@@ -29,7 +29,7 @@ Route::add('/', function() {
 //aplikacja wysyła nam login i hasło zakodowane JSON metodą post
 //API odpowiada do aplikacji
 Route::add('/login', function(){
- 
+  return var_dump($_POST);
 }, 'post');
 
 //ścieżka wyświetla dane dotyczące rachunku bankowego po jego numerze
