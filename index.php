@@ -4,6 +4,10 @@
 require_once('Route.php');
 //model odpowiadający za tabelę account w bazie danych - umożliwia operacje na rachunkach
 require_once('model/Account.php');
+
+require_once('model/User.php');
+
+require_once('model/Token.php');
 //połączenie do bazy danych
 //TODO: wyodrębnić zmienne dotyczące środowiska do pliku konfiguracyjnego
 $db = new mysqli('localhost', 'root', '', 'bankAPI');

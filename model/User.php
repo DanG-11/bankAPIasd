@@ -8,7 +8,7 @@ class User {
         $result = $query->get_result();
 
         if($result->num_rows == 0){
-            throw new Exception('Invalid login or password');
+            throw new Exception('Invalid login or password.');
         }
         else {
             $user = $result->fetch_assoc();
@@ -19,8 +19,9 @@ class User {
                 return $id;
             }
             else {
-                throw new Exception('Invalid login or password');
+                throw new Exception('Invalid login or password.');
             }
         }
     }
 }
+?>
