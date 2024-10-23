@@ -1,9 +1,9 @@
 <?php
 class User {
     static function login(string $login, string  $password, mysqli $db) : int {
-        $sql = "SELECT id, passwordHash FROM user WHERE email = ? AND passwordHash = ?";
+        $sql = "SELECT id, passwordHash FROM user WHERE email = ?";
         $query = $db->prepare($sql);
-        $query->bind_param('ss', $login);
+        $query->bind_param('s', $login);
         $query->execute();
         $result = $query->get_result();
 
