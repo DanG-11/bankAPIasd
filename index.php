@@ -41,6 +41,24 @@ Route::add('/account/([0-9]*)', function($accountNo) use($db) {
     return json_encode($account->getArray());
 });
 
+/*Route::add('/account/details', function() use($db){
+  $data = file_get_contents('php://input');
+  $data = json_decode($data, true);
+  $ip = $_SERVER['REMOTE_ADDR'];
+  
+  try{
+    $id = User::login($data['login'], $data['password'], $db);
+    $token = Token::new($ip, $id, $db);
+    header('Content-Type: application/json');
+    echo json_encode(['token' => $token]);
+  }
+  catch(Exception $e){
+    header('HTTP/1.1 401 Unauthorized');
+    echo json_encode(['error' => 'Invalid token']);
+    return;
+  }
+}, 'post');*/
+
 Route::run('/bankAPI');
 
 $db->close();
