@@ -58,6 +58,18 @@ Route::add('/account/details', function() use($db){
   return json_encode($account->getArray());
 }, 'post');
 
+Route::add('/transfer/new/', function() use($db){
+  $data = file_get_contents('php://input');
+  $dataArray = json_decode($data, true);
+  $token = $dataArray['token'];
+
+  if(!Token::check($token, $_SERVER['REMOTE_ADDR'], $db)){
+    header('HTTP/1.1 401 Unauthorized');
+
+    return json_encode(['error' => 'Invalid token']);
+  }
+}, 'post');
+
 Route::run('/bankAPI');
 
 $db->close();
