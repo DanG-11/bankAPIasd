@@ -23,7 +23,7 @@
 
                 $db->commit();
             }
-            catch(mysqli_sql_exception $e){
+            catch(Exception $e){
                 $db->rollback();
 
                 throw new Exception('Transfer failed');

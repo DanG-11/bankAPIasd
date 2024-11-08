@@ -7,6 +7,8 @@ require_once('model/User.php');
 
 require_once('model/Token.php');
 
+require_once('model/Transfer.php');
+
 $db = new mysqli('localhost', 'root', '', 'bankAPI');
 $db->set_charset('utf8');
 
@@ -54,20 +56,36 @@ Route::add('/account/details', function() use($db){
   $userId = Token::getUserId($token, $db);
   $accountNo = Account::getAccountNo($userId, $db);
   $account = Account::getAccount($accountNo, $db);
+
   header('Content-Type: application/json');
   return json_encode($account->getArray());
 }, 'post');
 
-Route::add('/transfer/new/', function() use($db){
+Route::add('/transfer/new', function() use($db){
   $data = file_get_contents('php://input');
   $dataArray = json_decode($data, true);
   $token = $dataArray['token'];
 
   if(!Token::check($token, $_SERVER['REMOTE_ADDR'], $db)){
     header('HTTP/1.1 401 Unauthorized');
-
     return json_encode(['error' => 'Invalid token']);
   }
+
+  $userId = Token::getUserId($token, $db);
+  $source = Account::getAccountNo($userId, $db);
+  $target = $dataArray['target'];
+  $amount = $dataArray['amount'];
+
+  //try{
+    Transfer::new($source, $target, $amount, $db);
+  /*}
+  catch(Exception $e){
+    header('HTTP/1.1 401 Unauthorized');
+
+    return json_encode(['error' => 'Invalid token']);
+  }*/
+  header('Status: 201');
+  return json_encode(['status' => 'OK']);
 }, 'post');
 
 Route::run('/bankAPI');
