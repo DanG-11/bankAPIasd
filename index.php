@@ -76,15 +76,19 @@ Route::add('/transfer/new', function() use($db){
   $target = $dataArray['target'];
   $amount = $dataArray['amount'];
 
-  //try{
-    Transfer::new($source, $target, $amount, $db);
-  /*}
-  catch(Exception $e){
-    header('HTTP/1.1 401 Unauthorized');
+  //if($amount < 0){
+  //  header('HTTP/1.1 401 Unauthorized');
+  //  return json_encode(['error' => 'Invalid token']);
+  //}
 
-    return json_encode(['error' => 'Invalid token']);
-  }*/
-  header('Status: 201');
+  //if(/*Account::getAccountAmount musze zrobic*/ < $amount){
+  //  header('HTTP/1.1 401 Unauthorized');
+  //  return json_encode(['error' => 'Invalid token']);
+  //}
+  
+  Transfer::new($source, $target, $amount, $db);
+  
+  header('Status: 200');
   return json_encode(['status' => 'OK']);
 }, 'post');
 

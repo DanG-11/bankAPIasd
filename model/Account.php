@@ -41,5 +41,7 @@ class Account {
         ];
         return $array;
     }
+
+    //TODO: public static function getAccountAmount (nazwa tlumaczy co masz zrobic geiuszu)
 }
 ?>
