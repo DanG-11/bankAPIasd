@@ -33,6 +33,21 @@ class Account {
         $account = new Account($account['accountNo'], $account['amount'], $account['name']);
         return $account;
     }
+
+    public static function getAccountAmount(int $accountNo, mysqli $db) : int {
+        $sql = "SELECT amount FROM account WHERE accountNo = ? LIMIT 1";
+
+        $query = $db->prepare($sql);
+        $query->bind_param('i', $accountNo);
+        $query->execute();
+
+        $result = $query->get_result();
+
+        $account = $result->fetch_assoc();
+        
+        return $account['amount'];
+    }
+
     public function getArray() : array {
         $array = [
             'accountNo' => $this->accountNo,
@@ -41,7 +56,5 @@ class Account {
         ];
         return $array;
     }
-
-    //TODO: public static function getAccountAmount (nazwa tlumaczy co masz zrobic geiuszu)
 }
 ?>
