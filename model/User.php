@@ -1,4 +1,7 @@
 <?php
+/**
+ * TODO: Dopisać komentarze dla dokumentacji dla całej klasy
+ */
 class User {
     static function login(string $login, string  $password, mysqli $db) : int {
         $sql = "SELECT id, passwordHash FROM user WHERE email = ?";

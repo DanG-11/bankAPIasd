@@ -1,4 +1,7 @@
 <?php
+/**
+ * TODO: Dopisać komentarze dla dokumentacji dla całego pliku
+ */
 require_once('Route.php');
 
 require_once('model/Account.php');

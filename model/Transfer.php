@@ -1,5 +1,15 @@
 <?php
+    /** 
+     * Class Transfer for handling everything about money transfers.
+    */
     class Transfer{
+        /**
+         * Function that makes a new transfer
+         * @param int $source TODO: Dopisać opis
+         * @param int $target TODO: Dopisać opis
+         * @param int $amount TODO: Dopisać opis
+         * @param mysqli $db TODO: Dopisać opis
+         */
         public static function new(int $source, int $target, int $amount, mysqli $db) : void {
             $db->begin_transaction();
             try{
