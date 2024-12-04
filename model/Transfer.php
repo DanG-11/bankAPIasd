@@ -57,5 +57,18 @@
             }
             
         }
+
+        public static function getTransfers(int $accountNo, mysqli $db) : array {
+            $sql = "SELECT * FROM transfer WHERE source = ? OR target = ?";
+            $query = $db->prepare($sql);
+            $query->bind_param('ii', $accountNo, $accountNo);
+            $query->execute();
+            $result = $query->get_result();
+            $transfers = [];
+            while($row = $result->fetch_assoc()){
+                $transfers[] = $row;
+            }
+            return $transfers;
+        }
     }
 ?>

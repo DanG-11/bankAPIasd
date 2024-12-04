@@ -30,6 +30,10 @@ require_once('class/AccountDetailsRequest.php');
 //TODO:
 require_once('class/AccountDetailsResponse.php');
 
+require_once('class/TransfersRequest.php');
+
+require_once('class/TransfersResponse.php');
+
 //TODO:
 $db = new mysqli('localhost', 'root', '', 'bankAPI');
 //TODO:
@@ -47,6 +51,10 @@ use BankAPI\LoginResponse;
 use BankAPI\AccountDetailsRequest;
 //TODO:
 use BankAPI\AccountDetailsResponse;
+
+use BankAPI\TransfersRequest;
+
+use BankAPI\TransfersResponse;
 
 //TODO:
 Route::add('/', function() {
@@ -162,6 +170,24 @@ Route::add('/transfer/new', function() use($db){
   header('Status: 200');
   //TODO:
   return json_encode(['status' => 'OK']);
+}, 'post');
+
+Route::add('/transfer/history', function() use($db){
+  $request = new TransfersRequest();
+  $response = new TransfersResponse();
+
+  if(!Token::check($request->getToken(), $_SERVER['REMOTE_ADDR'], $db)){
+    //TODO:
+    header('HTTP/1.1 401 Unauthorized');
+    //TODO:
+    return json_encode(['error' => 'Invalid amount']);
+  }
+
+  $userId = Token::getUserId($request->getToken(), $db);
+  $accountNo = Account::getAccountNo($userId, $db);
+
+  $response->setTransfers(Transfer::getTransfers($accountNo, $db));
+  $response->send();
 }, 'post');
 
 //TODO:

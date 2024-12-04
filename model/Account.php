@@ -30,7 +30,6 @@ class Account {
         //MySQL statement that selects ONLY 1 account number from the account table from the data of user id.
         $sql = "SELECT accountNo FROM account WHERE user_id = ? LIMIT 1";
 
-        //Query to zapytanie.
         //Preparation of a query to send it to the database.
         $query = $db->prepare($sql);
         //Binds the query to a prepared statement as parameters.
