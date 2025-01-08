@@ -1,37 +1,39 @@
 <?php
 /**
- * TODO: Dopisać komentarze dla dokumentacji dla całego pliku
+ * The main file with all routes.
  */
 
-//TODO:
+//Requires the Route.php file.
 require_once('Route.php');
 
-//TODO:
+//Requires the Account.php file.
 require_once('model/Account.php');
 
-//TODO:
+//Requires the User.php file.
 require_once('model/User.php');
 
-//TODO:
+//Requires the Token.php file.
 require_once('model/Token.php');
 
-//TODO:
+//Requires the Transfer.php file.
 require_once('model/Transfer.php');
 
-//TODO:
+//Requires the LoginRequest.php file.
 require_once('class/LoginRequest.php');
 
-//TODO:
+//Requires the LoginResponse.php file.
 require_once('class/LoginResponse.php');
 
-//TODO:
+//Requires the AccountDetailsRequest.php file.
 require_once('class/AccountDetailsRequest.php');
 
-//TODO:
+//Requires the AccountDetailsResponse.php file.
 require_once('class/AccountDetailsResponse.php');
 
+//Requires the TransfersRequest.php file.
 require_once('class/TransfersRequest.php');
 
+//Requires the TransfersResponse.php file.
 require_once('class/TransfersResponse.php');
 
 //TODO:
@@ -39,160 +41,173 @@ $db = new mysqli('localhost', 'root', '', 'bankAPI');
 //TODO:
 $db->set_charset('utf8');
 
-//TODO:
+//Uses the Route.php file.
 use Steampixel\Route;
-//TODO:
+//Uses the Account.php file.
 use BankAPI\Account;
-//TODO:
+//Uses the LoginRequest.php file.
 use BankAPI\LoginRequest;
-//TODO:
+//Uses the LoginResponse.php file.
 use BankAPI\LoginResponse;
-//TODO:
+//Uses the AccountDetailsRequest.php file.
 use BankAPI\AccountDetailsRequest;
-//TODO:
+//Uses the AccountDetailsResponse.php file.
 use BankAPI\AccountDetailsResponse;
-
+//Uses the TransfersRequest.php file.
 use BankAPI\TransfersRequest;
-
+//Uses the TransfersResponse.php file.
 use BankAPI\TransfersResponse;
 
-//TODO:
+//Adds a route.
 Route::add('/', function() {
-  //TODO:
+  //Types Hello world! on the site.
   echo 'Hello world!';
 });
 
-//TODO:
+//Adds a login route.
 Route::add('/login', function() use($db){
-  //utwórz obiekt rządania
+  //A login request.
   $request = new LoginRequest();
   
-  //TODO:
+  //Try method.
   try{
-    //TODO:
+    //Variable that gets the users login.
     $id = User::login($request->getLogin(), $request->getPassword(), $db);
-    //Wygeneruj nowy token dla tego użytkownika i tego IP
+    //No idea.
     $ip = $_SERVER['REMOTE_ADDR'];
+    //Generates a new token.
     $token = Token::new($ip, $id, $db);
  
-    //Stwórz obiekt odpowiedzi
+    //A login response.
     $response = new LoginResponse($token, "");
+    //Sends the login response.
     $response->send();
   }
   catch(Exception $e){
-    //Stwórz obiekt odpowiedzi
+    //An error login response.
     $response = new LoginResponse("", $e->getMessage());
+    //Sends the error login response.
     $response->send();
-    //TODO:
+    //Returns nothing.
     return;
   }
 }, 'post');
 
-//TODO:
+//Adds a account/([0-9]* route.
 Route::add('/account/([0-9]*)', function($accountNo) use($db) {
-  //TODO:
+  //Variable that gets the users account.
     $account = Account::getAccount($accountNo, $db);
-    //TODO:
+    //Makes the site header.
     header('Content-Type: application/json');
-    //TODO:
+    //Encodes the array
     return json_encode($account->getArray());
 });
 
-//TODO:
+//Adds a account/details route.
 Route::add('/account/details', function() use($db){
+  //Account details request.
   $request = new AccountDetailsRequest();
+  //Account details response
   $response = new AccountDetailsResponse();
   
-  //TODO:
+  //If loop that makes an error response.
   if(!Token::check($request->getToken(), $_SERVER['REMOTE_ADDR'], $db)) {
     $response->setError('Invalid token');
   }
 
-  //TODO:
+  //Gets the users id.
   $userId = Token::getUserId($request->getToken(), $db);
-  //TODO:
+  //Gets the users account number.
   $accountNo = Account::getAccountNo($userId, $db);
-  //TODO:
+  //Gets the user account.
   $account = Account::getAccount($accountNo, $db);
 
-  //ładujemy dane o koncie do odpowiedzi
+  //Makes a response.
   $response->setAccount($account->getArray());
-  //wysyłamy odpowiedź
+  //Sends the response.
   $response->send();
 }, 'post');
 
-//TODO:
+//Adds a transfer/new route.
 Route::add('/transfer/new', function() use($db){
-  //TODO:
+  //Gets the content.
   $data = file_get_contents('php://input');
-  //TODO:
+  //Decodes the content.
   $dataArray = json_decode($data, true);
-  //TODO:
+  //Gets the token.
   $token = $dataArray['token'];
 
-  //TODO:
+  //If loop that makes a header and returns an error.
   if(!Token::check($token, $_SERVER['REMOTE_ADDR'], $db)){
-    //TODO:
+    //Makes a header.
     header('HTTP/1.1 401 Unauthorized');
-    //TODO:
+    //Returns the error.
     return json_encode(['error' => 'Invalid token']);
   }
 
-  //TODO:
+  //Gets users id.
   $userId = Token::getUserId($token, $db);
-  //TODO:
+  //Gets users account number.
   $source = Account::getAccountNo($userId, $db);
-  //TODO:
+  //Gets the target.
   $target = $dataArray['target'];
-  //TODO:
+  //Gets the ammount.
   $amount = $dataArray['amount'];
 
-  //TODO:
+  //If loop that makes a header and returns an error.
   if($amount <= 0){
-    //TODO:
+    //Makes a header.
     header('HTTP/1.1 401 Unauthorized');
-    //TODO:
+    //Returns the error.
     return json_encode(['error' => 'Invalid amount']);
   }
 
-  //TODO:
+  //If loop that makes a header and returns an error.
   if(Account::getAccountAmount($source, $db) < $amount){
-    //TODO:
+    //Makes a header.
     header('HTTP/1.1 401 Unauthorized');
-    //TODO:
+    //Returns the error.
     return json_encode(['error' => 'Invalid amount']);
   }
   
-  //TODO:
+  //Makes a new transfer
   Transfer::new($source, $target, $amount, $db);
   
-  //TODO:
+  //Makes a header.
   header('Status: 200');
-  //TODO:
+  //Returns the status.
   return json_encode(['status' => 'OK']);
 }, 'post');
 
+//Adds a transfer/history route.
 Route::add('/transfer/history', function() use($db){
+  //Transfer request.
   $request = new TransfersRequest();
+  //Transfer response.
   $response = new TransfersResponse();
 
+  //If loop that makes a header and returns an error.
   if(!Token::check($request->getToken(), $_SERVER['REMOTE_ADDR'], $db)){
-    //TODO:
+    //Makes a header.
     header('HTTP/1.1 401 Unauthorized');
-    //TODO:
+    //Returns the error.
     return json_encode(['error' => 'Invalid amount']);
   }
 
+  //Gets the users id.
   $userId = Token::getUserId($request->getToken(), $db);
+  //Gets the users account number.
   $accountNo = Account::getAccountNo($userId, $db);
 
+  //Sets a transfer.
   $response->setTransfers(Transfer::getTransfers($accountNo, $db));
+  //Sends the transfer to the database.
   $response->send();
 }, 'post');
 
-//TODO:
+//Runs the /bankAPI route.
 Route::run('/bankAPI');
 
-//TODO:
+//Closes connection to the database.
 $db->close();
 ?>

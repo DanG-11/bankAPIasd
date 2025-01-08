@@ -27,14 +27,14 @@ class Account {
      * @param mysqli $db is a variable that stores the database info.
      */
     public static function getAccountNo(int $userId, mysqli $db) : int {
-        //MySQL statement that selects ONLY 1 account number from the account table from the data of user id.
+        //MySQL statement that selects ONLY 1 account number from the account table in the data of user id.
         $sql = "SELECT accountNo FROM account WHERE user_id = ? LIMIT 1";
 
         //Preparation of a query to send it to the database.
         $query = $db->prepare($sql);
         //Binds the query to a prepared statement as parameters.
         $query->bind_param('i', $userId);
-        //Executes the query
+        //Executes the query.
         $query->execute();
 
         //Gets the result of a query and stores it.
@@ -68,31 +68,31 @@ class Account {
      * @param mysqli $db Is a variable that stores the database info.
      */
     public static function getAccountAmount(int $accountNo, mysqli $db) : int {
-        //TODO:
+        //MySQL statement that selects ONLY 1 amount number from the account table from the data of user id.
         $sql = "SELECT amount FROM account WHERE accountNo = ? LIMIT 1";
 
-        //TODO:
+        //Preparation of a query to send it to the database.
         $query = $db->prepare($sql);
-        //TODO:
+        //Binds the query to a prepared statement as parameters.
         $query->bind_param('i', $accountNo);
-        //TODO:
+        //Executes the query.
         $query->execute();
 
-        //TODO:
+        //Fetches the account information from the $result variable.
         $result = $query->get_result();
 
-        //TODO:
+        //Fetches the account information from the $result variable.
         $account = $result->fetch_assoc();
         
-        //TODO:
+        //Returns the account number from the $account variable.
         return $account['amount'];
     }
 
     /**
-     * Function that makes an association table
-     * Account number is assigned from the property this->accountNo
-     * Account amount is assigned from the property this->amount
-     * Account name is assigned from the property this->name
+     * Function that makes an association table.
+     * Account number is assigned from the property this->accountNo.
+     * Account amount is assigned from the property this->amount.
+     * Account name is assigned from the property this->name.
      */
     public function getArray() : array {
         $array = [

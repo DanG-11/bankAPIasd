@@ -1,81 +1,95 @@
 <?php
 
 /**
- * Class for handling everything about tokens
+ * Class for handling everything about tokens.
  */
 class Token {
-    //TODO:
+    /**
+     * Function that makes a new token.
+     * @param int $ip Is a variable that stores the users ip.
+     * @param int $UserId a variable that stores the users id.
+     * @param mysqli $db is a variable that stores the database info.
+     */
     static function new(string $ip, int $userId, mysqli $db) : string {
-        //TODO:
+        //variable that stores a newly maid hash.
         $hash = hash('sha256', $ip . $userId . time());
-        //TODO:
+        //MySQL statement that inserts the token, ip and user id data into the table token.
         $sql = "INSERT INTO token (token, ip, user_id) VALUES (?, ?, ?)";
-        //TODO:
+        //Preparation of a query to send it to the database.
         $query = $db->prepare($sql);
 
-        //TODO:
+        //Binds the query to a prepared statement as parameters.
         $query->bind_param('ssi', $hash, $ip, $userId);
-        //TODO:
+        //If loop that shows an error.
         if(!$query->execute()){
-            //TODO:
+            //Shows an error.
             throw new Exception('Could not create token.');
         }
         else{
-            //TODO:
+            //Returns the hash
             return $hash;
         }
     }
 
-    //TODO:
+    /**
+     * Function that checks the token.
+     * @param string $token Is a variable that stores the users ip.
+     * @param int $ip a variable that stores the users id.
+     * @param mysqli $db is a variable that stores the database info.
+     */
     static function check(string $token, string $ip, mysqli $db) : bool {
-        //TODO:
+        //MySQL statement that selects all data from the token table that matches the set variables.
         $sql = "SELECT * FROM token WHERE token = ? AND ip = ?";
 
-        //TODO:
+        //Preparation of a query to send it to the database.
         $query = $db->prepare($sql);
-        //TODO:
+        //Binds the query to a prepared statement as parameters.
         $query->bind_param('ss', $token, $ip);
-        //TODO:
+        //Executes the query.
         $query->execute();
 
-        //TODO:
+        //Gets the result of a query and stores it.
         $result = $query->get_result();
 
-        //TODO:
+        //If loop that returns either true or false.
         if($result->num_rows == 0) {
-            //TODO:
+            //Returns false.
             return false;
         }
         else {
-            //TODO:
+            //Returns true
             return true;
         }
     }
 
-    //TODO:
+    /**
+     * Function that selects the UserId.
+     * @param string $token Is a variable that stores the users ip.
+     * @param mysqli $db is a variable that stores the database info.
+     */
     static function getUserId(string $token, mysqli $db) : int {
-        //TODO:
+        //MySQL statement that only 1 user id from the token table with set variables ordered by id.
         $sql = "SELECT user_id FROM token WHERE token = ? ORDER BY id DESC LIMIT 1";
 
-        //TODO:
+        //Preparation of a query to send it to the database.
         $query = $db->prepare($sql);
-        //TODO:
+        //Binds the query to a prepared statement as parameters.
         $query->bind_param('s', $token);
-        //TODO:
+        //Executes the query.
         $query->execute();
 
-        //TODO:
+        //Gets the result of a query and stores it.
         $result = $query->get_result();
 
-        //TODO:
+        //If loop that either retrieves data from the database or shows an error.
         if($result->num_rows == 0) {
-            //TODO:
+            //Shows an error.
             throw new Exception('Invalid token');
         }
         else {
-            //TODO:
+            //Retrieves data from the database.
             $row = $result->fetch_assoc();
-            //TODO:
+            //Returns the users id.
             return $row['user_id'];
         }
     }
