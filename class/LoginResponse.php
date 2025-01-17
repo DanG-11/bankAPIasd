@@ -5,6 +5,9 @@ class LoginResponse {
     private $token;
     private $error;
 
+    /**
+     * Function that makes a constructor.
+     */
     public function __construct(string $token, string $error) {
         $this->token = $token;
         $this->error = $error;

@@ -1,9 +1,14 @@
 <?php
 /**
- * TODO: Dopisać komentarze dla dokumentacji dla całej klasy
+ * Class for handling everything about users
  */
 class User {
-    //TODO:
+    /**
+     * Function that handles logins.
+     * @param $login Is a variable that stores the users login details.
+     * @param $password Is a variable that stores the users password details.
+     * @param $db Is a variable that stores the database details.
+     */
     static function login(string $login, string  $password, mysqli $db) : int {
         //TODO:
         $sql = "SELECT id, passwordHash FROM user WHERE email = ?";
